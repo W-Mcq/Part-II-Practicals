@@ -14,40 +14,40 @@ def main(argv):
     if opts == []:
         print('huckel.py -l <linear length> -c <cyclic length> -f <filename>')
         sys.exit()
-    for opt, arg in opts:
-        if opt == '-h':
-            print('huckel.py -l <linear length> -c <cyclic length> -f <filename>')
-            sys.exit()
-        elif opt == '-l':
-            try:
-                eigenvalues = hl.poly_ene_huckel(int(arg))
-            except TypeError as err:
-                sys.exit(err)
-            except ValueError as err:
-                sys.exit(err)
-            fout = 'out_linear_polyene_c' + arg + '.txt'
-            break
-        elif opt == '-c':
-            try:
-                eigenvalues = hl.cyclicpolyenehuckel(int(arg))
-            except TypeError as err:
-                sys.exit(err)
-            except ValueError as err:
-                sys.exit(err)
-            fout = 'out_cyclic_polyene_c' + arg + '.txt'
-            break
-        elif opt == '-f':
-            try:
-                with open(arg, 'r') as f:
-                    yarns = f.read()
-                    yarns = ''.join(yarns.split())
-                    yarn_list = [yarn.split(',') for yarn in yarns.split(';')]
-                    eigenvalues = hl.connectivity_to_eigenvalues(yarn_list)
-            except FileNotFoundError:
-                sys.exit('Please provide an existing file')
-            fout = 'out_' + arg
-            break
-        break
+    opt, arg = opts[0]
+
+    if opt == '-h':
+        print('huckel.py -l <linear length> -c <cyclic length> -f <filename>')
+        sys.exit()
+    elif opt == '-l':  # linear polyene
+        try:
+            eigenvalues = hl.poly_ene_huckel(int(arg))
+        except TypeError as err:
+            sys.exit(err)
+        except ValueError as err:
+            sys.exit(err)
+        fout = 'out_linear_polyene_c' + arg + '.txt'
+    elif opt == '-c':  # cyclic polyene
+        try:
+            eigenvalues = hl.cyclicpolyenehuckel(int(arg))
+        except TypeError as err:
+            sys.exit(err)
+        except ValueError as err:
+            sys.exit(err)
+        fout = 'out_cyclic_polyene_c' + arg + '.txt'
+    elif opt == '-f':  # calculate based on a given file with a connection map
+        try:
+            with open(arg, 'r') as f:
+                yarns = f.read()
+                yarns = ''.join(yarns.split())
+                yarn_list = [yarn.split(',') for yarn in yarns.split(';')]
+                eigenvalues = hl.connectivity_to_eigenvalues(yarn_list)
+        except FileNotFoundError:
+            sys.exit('Please provide an existing file')
+        fout = 'out_' + arg
+    else:
+        print('huckel.py -l <linear length> -c <cyclic length> -f <filename>')
+        sys.exit()
 
     output += '{:^{width}} {} {:^{width}}'.format(
         'Eigenvalue', ',', 'Degeneracy', width=15) + '\n'
