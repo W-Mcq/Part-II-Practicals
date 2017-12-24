@@ -1,0 +1,6 @@
+a,b,c,d,a;
+e,f,g,h,e;
+e,a;
+f,b;
+c,g;
+h,d;
